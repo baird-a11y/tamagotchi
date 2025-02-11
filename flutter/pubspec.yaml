@@ -1,0 +1,26 @@
+name: todo_tamagotchi
+description: A To-Do app with Tamagotchi feature.
+version: 1.0.0+1
+
+environment:
+    sdk: ">=3.6.0 <4.0.0"
+
+dependencies:
+    flutter:
+        sdk: flutter
+    shared_preferences: ^2.2.2
+    cupertino_icons: ^1.0.8
+    universal_html: ^2.2.4
+
+flutter:
+  assets:
+    - assets/tamagotchis/sad_tamagotchi.png
+    - assets/tamagotchis/neutral_tamagotchi.png
+    - assets/tamagotchis/happy_tamagotchi.png
+    - assets/tamagotchis/dragon_tamagotchi.png
+    - assets/tamagotchis/default_tamagotchi.png
+  fonts:
+    - family: NotoSans
+      fonts:
+        - asset: fonts/NotoSans-Regular.ttf
+        - asset: fonts/NotoSans-Bold.ttf
