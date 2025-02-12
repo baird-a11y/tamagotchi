@@ -96,12 +96,11 @@ class _ToDoTamagotchiScreenState extends State<ToDoTamagotchiScreen> {
           showDialog(
             context: context,
             builder: (context) {
+              String newTask = "";
               return AlertDialog(
                 title: Text('Neue Aufgabe hinzufügen', style: TextStyle(fontFamily: 'NotoSans')),
                 content: TextField(
-                  onChanged: (value) => setState(() {
-                    tasks.add({'title': value, 'done': false});
-                  }),
+                  onChanged: (value) => newTask = value,
                 ),
                 actions: [
                   TextButton(
@@ -110,7 +109,12 @@ class _ToDoTamagotchiScreenState extends State<ToDoTamagotchiScreen> {
                   ),
                   TextButton(
                     onPressed: () {
-                      _saveProfile();
+                      if (newTask.isNotEmpty) {
+                        setState(() {
+                          tasks.add({'title': newTask, 'done': false});
+                        });
+                        _saveProfile();
+                      }
                       Navigator.pop(context);
                     },
                     child: Text('Hinzufügen', style: TextStyle(fontFamily: 'NotoSans')),
