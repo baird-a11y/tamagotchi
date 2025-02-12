@@ -55,7 +55,7 @@ class _ToDoTamagotchiScreenState extends State<ToDoTamagotchiScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('$tamagotchiName', style: TextStyle(fontFamily: 'NotoSans'))),
+      appBar: AppBar(title: Text(tamagotchiName.isNotEmpty ? tamagotchiName : "Dein Tamagotchi", style: TextStyle(fontFamily: 'NotoSans'))),
       body: Column(
         children: [
           SizedBox(height: 20),
