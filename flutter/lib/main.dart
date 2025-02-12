@@ -51,7 +51,7 @@ class _ToDoTamagotchiScreenState extends State<ToDoTamagotchiScreen> {
       body: Column(
         children: [
           SizedBox(height: 20),
-          Image.asset('assets/tamagotchis/$selectedTamagotchi', height: 150),
+          Image.asset('tamagotchis/$selectedTamagotchi', height: 150),
           Expanded(
             child: ListView.builder(
               itemCount: tasks.length,
