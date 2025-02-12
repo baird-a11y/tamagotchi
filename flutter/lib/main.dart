@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import 'package:universal_html/html.dart' as web;
 import 'dart:async';
+import 'package:flutter/animation.dart';
 
 // Nur für mobile/Desktop-Plattformen verwenden wir dart:io
 import 'dart:io' if (dart.library.io) 'dart:io';
@@ -29,7 +30,7 @@ class ToDoTamagotchiScreen extends StatefulWidget {
   _ToDoTamagotchiScreenState createState() => _ToDoTamagotchiScreenState();
 }
 
-class _ToDoTamagotchiScreenState extends State<ToDoTamagotchiScreen> {
+class _ToDoTamagotchiScreenState extends State<ToDoTamagotchiScreen> with SingleTickerProviderStateMixin {
   List<Map<String, dynamic>> tasks = [];
   int completedTasks = 0;
   String tamagotchiName = "";
@@ -42,12 +43,21 @@ class _ToDoTamagotchiScreenState extends State<ToDoTamagotchiScreen> {
   ];
   int currentFrame = 0;
   Timer? animationTimer;
+  late AnimationController _jumpController;
+  late Animation<double> _jumpAnimation;
 
   @override
   void initState() {
     super.initState();
     _loadProfile();
     _startAnimation();
+    _jumpController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+    );
+    _jumpAnimation = Tween<double>(begin: 0, end: -20).animate(
+      CurvedAnimation(parent: _jumpController, curve: Curves.easeOut),
+    );
   }
 
   void _startAnimation() {
@@ -58,9 +68,14 @@ class _ToDoTamagotchiScreenState extends State<ToDoTamagotchiScreen> {
     });
   }
 
+  void _jumpTamagotchi() {
+    _jumpController.forward().then((_) => _jumpController.reverse());
+  }
+
   @override
   void dispose() {
     animationTimer?.cancel();
+    _jumpController.dispose();
     super.dispose();
   }
 
@@ -71,7 +86,16 @@ class _ToDoTamagotchiScreenState extends State<ToDoTamagotchiScreen> {
       body: Column(
         children: [
           SizedBox(height: 20),
-          Image.asset(tamagotchiFrames[currentFrame], height: 150),
+          AnimatedBuilder(
+            animation: _jumpAnimation,
+            builder: (context, child) {
+              return Transform.translate(
+                offset: Offset(0, _jumpAnimation.value),
+                child: child,
+              );
+            },
+            child: Image.asset(tamagotchiFrames[currentFrame], height: 150),
+          ),
           Expanded(
             child: ListView.builder(
               itemCount: tasks.length,
@@ -84,6 +108,7 @@ class _ToDoTamagotchiScreenState extends State<ToDoTamagotchiScreen> {
                         tasks[index]['done'] = value;
                         _saveProfile();
                       });
+                      _jumpTamagotchi();
                     },
                   ),
                   title: Text(tasks[index]['title'], style: TextStyle(fontFamily: 'NotoSans')),
