@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import 'package:universal_html/html.dart' as web;
+import 'dart:async';
 
 // Nur für mobile/Desktop-Plattformen verwenden wir dart:io
 import 'dart:io' if (dart.library.io) 'dart:io';
@@ -33,33 +34,44 @@ class _ToDoTamagotchiScreenState extends State<ToDoTamagotchiScreen> {
   int completedTasks = 0;
   String tamagotchiName = "";
   String selectedTamagotchi = "";
-  List<String> tamagotchiOptions = [
-    'dragon_tamagotchi.png'
+  List<String> tamagotchiFrames = [
+    'assets/tamagotchis/Slime_Idle1.png',
+    'assets/tamagotchis/Slime_Idle2.png',
+    'assets/tamagotchis/Slime_Idle3.png',
+    'assets/tamagotchis/Slime_Idle4.png',
   ];
-  String defaultTamagotchi = 'default_tamagotchi.png';
+  int currentFrame = 0;
+  Timer? animationTimer;
 
   @override
   void initState() {
     super.initState();
     _loadProfile();
+    _startAnimation();
   }
 
-  String _getTamagotchiImage() {
-    String imagePath = selectedTamagotchi.isNotEmpty
-        ? 'assets/tamagotchis/$selectedTamagotchi'
-        : 'assets/tamagotchis/$defaultTamagotchi';
-    print("[DEBUG] Loading Image Path: $imagePath");
-    return imagePath;
+  void _startAnimation() {
+    animationTimer = Timer.periodic(Duration(milliseconds: 300), (timer) {
+      setState(() {
+        currentFrame = (currentFrame + 1) % tamagotchiFrames.length;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    animationTimer?.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(tamagotchiName.isNotEmpty ? tamagotchiName : "Dein Tamagotchi", style: TextStyle(fontFamily: 'NotoSans'))),
+      appBar: AppBar(title: Text(tamagotchiName.isNotEmpty ? tamagotchiName : "Slime", style: TextStyle(fontFamily: 'NotoSans'))),
       body: Column(
         children: [
           SizedBox(height: 20),
-          Image.asset(_getTamagotchiImage(), height: 150),
+          Image.asset(tamagotchiFrames[currentFrame], height: 150),
           Expanded(
             child: ListView.builder(
               itemCount: tasks.length,
