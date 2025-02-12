@@ -44,6 +44,14 @@ class _ToDoTamagotchiScreenState extends State<ToDoTamagotchiScreen> {
     _loadProfile();
   }
 
+  String _getTamagotchiImage() {
+    String imagePath = selectedTamagotchi.isNotEmpty
+        ? 'assets/tamagotchis/$selectedTamagotchi'
+        : 'assets/tamagotchis/$defaultTamagotchi';
+    print("[DEBUG] Loading Image Path: $imagePath");
+    return imagePath;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +59,7 @@ class _ToDoTamagotchiScreenState extends State<ToDoTamagotchiScreen> {
       body: Column(
         children: [
           SizedBox(height: 20),
-          Image.asset('assets/tamagotchis/$selectedTamagotchi', height: 150),
+          Image.asset(_getTamagotchiImage(), height: 150),
           Expanded(
             child: ListView.builder(
               itemCount: tasks.length,
